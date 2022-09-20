@@ -8,6 +8,7 @@ import {
   Stack,
   TextField,
   Button,
+  Typography,
 } from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { CircularProgress } from "components/lib";
@@ -45,6 +46,7 @@ export const CentralAllocationForm = () => {
   const selectedBuildingId = watch("buildingId");
   const selectedFloorId = watch("floorId");
   const selectedWingId = watch("wingId");
+  const allocatedCapacity = watch("capacity");
 
   const data = getFormData.data;
 
@@ -59,6 +61,15 @@ export const CentralAllocationForm = () => {
       },
     });
   };
+
+  const totalSeats = selectedWingId
+    ? data.buildings
+        .filter((building) => building.id === selectedBuildingId)[0]
+        .floors.filter((floor) => floor.id === selectedFloorId)[0]
+        .wings.filter((wing) => wing.id === selectedWingId)[0].seatsCount
+    : 0;
+
+  console.log("totalSeats", allocatedCapacity);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -192,10 +203,17 @@ export const CentralAllocationForm = () => {
             </Stack>
           </FormControl>
         </Grid>
+        {selectedWingId && (
+          <Grid item xs={12}>
+            <Typography variant="body1">
+              Total Seats Available: {totalSeats}
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <FormControl fullWidth={true}>
             <Stack spacing={1}>
-              <FormLabel id="capacity">Allowed Capacity</FormLabel>
+              <FormLabel id="capacity">Allocate Capacity</FormLabel>
               <Controller
                 name="capacity"
                 control={control}
@@ -214,7 +232,12 @@ export const CentralAllocationForm = () => {
           <Button
             variant="contained"
             type="submit"
-            disabled={loading || selectedWingId === ""}
+            disabled={
+              loading ||
+              selectedWingId === "" ||
+              parseInt(allocatedCapacity || 0) === 0 ||
+              parseInt(allocatedCapacity) > totalSeats
+            }
           >
             Allocate
           </Button>

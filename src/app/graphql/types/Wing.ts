@@ -6,17 +6,35 @@ export const Wing = objectType({
     t.nonNull.string("id", { description: "ID of the Wing" });
     t.nonNull.string("wingName", { description: "Name of the Wing" });
     t.nonNull.date("createdAt", { description: "Created Date" });
-    t.nonNull.list.nonNull.field("seats", {
-      description: "All the seats associated to the Wing",
-      type: "Seat",
+    t.nonNull.field("seatsCount", {
+      description: "Total seats for the current wing",
+      type: "Int",
       async resolve(parent, _args, { prisma }) {
-        return await prisma.seat.findMany({
+        const data = await prisma.seat.aggregate({
           where: {
             wingId: parent.id,
           },
+          _count: {
+            seatNumber: true,
+          },
         });
+
+        console.log("data::", { data });
+
+        return data._count.seatNumber;
       },
-    });
+    }),
+      t.nonNull.list.nonNull.field("seats", {
+        description: "All the seats associated to the Wing",
+        type: "Seat",
+        async resolve(parent, _args, { prisma }) {
+          return await prisma.seat.findMany({
+            where: {
+              wingId: parent.id,
+            },
+          });
+        },
+      });
   },
 });
 

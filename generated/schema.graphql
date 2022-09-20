@@ -242,6 +242,9 @@ type Wing {
   """All the seats associated to the Wing"""
   seats: [Seat!]!
 
+  """Total seats for the current wing"""
+  seatsCount: Int!
+
   """Name of the Wing"""
   wingName: String!
 }

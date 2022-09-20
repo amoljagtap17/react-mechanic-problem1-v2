@@ -11,6 +11,7 @@ const GET_FORM_DATA = gql`
         wings {
           id
           wingName
+          seatsCount
         }
       }
     }
