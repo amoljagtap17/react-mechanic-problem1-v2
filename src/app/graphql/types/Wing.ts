@@ -10,31 +10,36 @@ export const Wing = objectType({
       description: "Total seats for the current wing",
       type: "Int",
       async resolve(parent, _args, { prisma }) {
-        const data = await prisma.seat.aggregate({
+        const totalSeats = await prisma.seat.findMany({
           where: {
             wingId: parent.id,
           },
-          _count: {
-            seatNumber: true,
+          select: {
+            id: true,
           },
         });
 
-        console.log("data::", { data });
+        const allocatedSeats = await prisma.capacity.findMany({
+          where: {
+            wingId: parent.id,
+          },
+          select: {
+            capacity: true,
+          },
+        });
 
-        return data._count.seatNumber;
+        const allocSeats =
+          allocatedSeats.length > 0
+            ? allocatedSeats
+                .map((item) => item.capacity)
+                .reduce((total, item) => total + item, 0)
+            : 0;
+
+        const count = totalSeats.length - allocSeats;
+
+        return count;
       },
-    }),
-      t.nonNull.list.nonNull.field("seats", {
-        description: "All the seats associated to the Wing",
-        type: "Seat",
-        async resolve(parent, _args, { prisma }) {
-          return await prisma.seat.findMany({
-            where: {
-              wingId: parent.id,
-            },
-          });
-        },
-      });
+    });
   },
 });
 

@@ -239,9 +239,6 @@ type Wing {
   """ID of the Wing"""
   id: String!
 
-  """All the seats associated to the Wing"""
-  seats: [Seat!]!
-
   """Total seats for the current wing"""
   seatsCount: Int!
 

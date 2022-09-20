@@ -58,6 +58,7 @@ export const CentralAllocationForm = () => {
       onCompleted() {
         reset();
         getCapacityData.refetch();
+        getFormData.refetch();
       },
     });
   };
@@ -68,8 +69,6 @@ export const CentralAllocationForm = () => {
         .floors.filter((floor) => floor.id === selectedFloorId)[0]
         .wings.filter((wing) => wing.id === selectedWingId)[0].seatsCount
     : 0;
-
-  console.log("totalSeats", allocatedCapacity);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

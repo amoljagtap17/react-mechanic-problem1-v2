@@ -219,7 +219,6 @@ export interface NexusGenFieldTypes {
   Wing: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // String!
-    seats: NexusGenRootTypes['Seat'][]; // [Seat!]!
     seatsCount: number; // Int!
     wingName: string; // String!
   }
@@ -315,7 +314,6 @@ export interface NexusGenFieldTypeNames {
   Wing: { // field return type name
     createdAt: 'DateTime'
     id: 'String'
-    seats: 'Seat'
     seatsCount: 'Int'
     wingName: 'String'
   }
