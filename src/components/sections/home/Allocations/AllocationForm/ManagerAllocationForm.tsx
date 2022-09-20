@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { CircularProgress } from "components/lib";
 import { useGetManagerFormData } from "./useGetManagerFormData";
 import { useCreateAllocation } from "./useCreateAllocation";
 
@@ -40,7 +41,7 @@ export const ManagerAllocationForm = () => {
   const [createAllocation, { loading }] = useCreateAllocation();
 
   if (getManagerFormData.loading) {
-    return <h1>Loading...</h1>;
+    return <CircularProgress />;
   }
 
   const { departmentsForCurrentUser, buildings } = getManagerFormData.data;

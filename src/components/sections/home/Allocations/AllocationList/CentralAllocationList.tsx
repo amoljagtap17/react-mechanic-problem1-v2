@@ -6,13 +6,14 @@ import {
   IconButton,
 } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
+import { CircularProgress } from "components/lib";
 import { useCentralCapacityData } from "./useCentralAllocationData";
 
 export const CentralAllocationList = () => {
   const getCapacityData = useCentralCapacityData();
 
   if (getCapacityData.loading) {
-    return <h1>loading...</h1>;
+    return <CircularProgress />;
   }
 
   const { capacity } = getCapacityData.data;

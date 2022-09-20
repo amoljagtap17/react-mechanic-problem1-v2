@@ -6,13 +6,14 @@ import {
   IconButton,
 } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
+import { CircularProgress } from "components/lib";
 import { useManagerAllocationData } from "./useManagerAllocationData";
 
 export const ManagerAllocationList = () => {
   const getAllocationData = useManagerAllocationData();
 
   if (getAllocationData.loading) {
-    return <h1>loading...</h1>;
+    return <CircularProgress />;
   }
 
   const { allocations } = getAllocationData.data;

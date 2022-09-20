@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { CircularProgress } from "components/lib";
 import { useGetFormData } from "./useGetFormData";
 import { useCreateCapacity } from "./useCreateCapacity";
 
@@ -35,7 +36,7 @@ export const CentralAllocationForm = () => {
   const [createCapacity, { loading }] = useCreateCapacity();
 
   if (getFormData.loading || loading) {
-    return <h1>loading..</h1>;
+    return <CircularProgress />;
   }
 
   const data = getFormData.data;

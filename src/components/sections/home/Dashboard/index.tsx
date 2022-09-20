@@ -1,12 +1,12 @@
 import { Grid } from "@mui/material";
-import { StatsCard } from "components/lib";
+import { StatsCard, CircularProgress } from "components/lib";
 import { useDashboardData } from "./useDashboardData";
 
 export const Dashboard = () => {
   const getDashboardData = useDashboardData();
 
   if (getDashboardData.loading) {
-    return <h1>Loading...</h1>;
+    return <CircularProgress />;
   }
 
   const { capacity, seatCount } = getDashboardData.data;

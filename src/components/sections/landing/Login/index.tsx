@@ -12,6 +12,7 @@ import {
   Radio,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
+import { CircularProgress } from "components/lib";
 import { useGetSuperUsers } from "./useGetSuperUsers";
 
 export const Login = () => {
@@ -23,7 +24,7 @@ export const Login = () => {
   };
 
   if (superUsersQuery.loading) {
-    return <h1>loading</h1>;
+    return <CircularProgress />;
   }
 
   return (
