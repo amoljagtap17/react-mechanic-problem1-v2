@@ -11,7 +11,8 @@ export const Dashboard = () => {
 
   const { capacity, seatCount } = getDashboardData.data;
 
-  const currentAllocated = capacity[0].assignedCapacity;
+  const currentAllocated =
+    capacity.length > 0 ? capacity[0].assignedCapacity : 0;
 
   return (
     <Grid container spacing={4}>

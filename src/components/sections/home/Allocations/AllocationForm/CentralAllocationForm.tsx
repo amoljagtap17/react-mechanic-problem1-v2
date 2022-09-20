@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { CircularProgress } from "components/lib";
+import { useCentralCapacityData } from "../AllocationList/useCentralAllocationData";
 import { useGetFormData } from "./useGetFormData";
 import { useCreateCapacity } from "./useCreateCapacity";
 
@@ -34,8 +35,9 @@ export const CentralAllocationForm = () => {
   });
   const getFormData = useGetFormData();
   const [createCapacity, { loading }] = useCreateCapacity();
+  const getCapacityData = useCentralCapacityData();
 
-  if (getFormData.loading || loading) {
+  if (getFormData.loading) {
     return <CircularProgress />;
   }
 
@@ -65,14 +67,13 @@ export const CentralAllocationForm = () => {
   });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-
     createCapacity({
       variables: {
         data: { ...data, capacity: parseInt(data.capacity) },
       },
       onCompleted() {
         reset();
+        getCapacityData.refetch();
       },
     });
   };
