@@ -24,7 +24,7 @@ interface IFormInput {
 }
 
 export const CentralAllocationForm = () => {
-  const { control, handleSubmit, reset } = useForm<IFormInput>({
+  const { control, handleSubmit, reset, watch } = useForm<IFormInput>({
     defaultValues: {
       divisionId: "",
       buildingId: "",
@@ -41,30 +41,12 @@ export const CentralAllocationForm = () => {
     return <CircularProgress />;
   }
 
+  const selectedDivisionId = watch("divisionId");
+  const selectedBuildingId = watch("buildingId");
+  const selectedFloorId = watch("floorId");
+  const selectedWingId = watch("wingId");
+
   const data = getFormData.data;
-
-  const buildingOptions: { id: String; label: String }[] = [];
-  const floorOptions: { id: String; label: String }[] = [];
-  const wingOptions: { id: String; label: String }[] = [];
-  const divisionOptions: { id: String; label: String }[] = [];
-
-  data.buildings.forEach(({ id, buildingName, floors }: any) => {
-    buildingOptions.push({ id, label: buildingName });
-
-    floors.forEach(({ id, floorNo, wings }: any) => {
-      floorOptions.push({ id, label: floorNo });
-
-      wings.forEach(({ id, wingName }: any) => {
-        wingOptions.push({ id, label: wingName });
-      });
-    });
-  });
-
-  data.divisions.forEach(({ id, divisionName }: any) => {
-    if (divisionName !== "central") {
-      divisionOptions.push({ id, label: divisionName });
-    }
-  });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     createCapacity({
@@ -88,15 +70,26 @@ export const CentralAllocationForm = () => {
               <Controller
                 name="divisionId"
                 control={control}
-                render={({ field }) => (
-                  <Select {...field}>
-                    {divisionOptions.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const divisionOptions = data.divisions
+                    .filter(
+                      (division: any) => division.divisionName !== "central"
+                    )
+                    .map((division: any) => ({
+                      id: division.id,
+                      label: division.divisionName,
+                    }));
+
+                  return (
+                    <Select {...field}>
+                      {divisionOptions.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                }}
               />
             </Stack>
           </FormControl>
@@ -108,15 +101,24 @@ export const CentralAllocationForm = () => {
               <Controller
                 name="buildingId"
                 control={control}
-                render={({ field }) => (
-                  <Select {...field}>
-                    {buildingOptions.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const buildingOptions = data.buildings.map(
+                    (building: any) => ({
+                      id: building.id,
+                      label: building.buildingName,
+                    })
+                  );
+
+                  return (
+                    <Select {...field} disabled={selectedDivisionId === ""}>
+                      {buildingOptions.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                }}
               />
             </Stack>
           </FormControl>
@@ -128,15 +130,28 @@ export const CentralAllocationForm = () => {
               <Controller
                 name="floorId"
                 control={control}
-                render={({ field }) => (
-                  <Select {...field}>
-                    {floorOptions.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const floorOptions = selectedBuildingId
+                    ? data.buildings
+                        .filter(
+                          (building) => building.id === selectedBuildingId
+                        )[0]
+                        .floors.map((floor: any) => ({
+                          id: floor.id,
+                          label: floor.floorNo,
+                        }))
+                    : [];
+
+                  return (
+                    <Select {...field} disabled={selectedBuildingId === ""}>
+                      {floorOptions.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                }}
               />
             </Stack>
           </FormControl>
@@ -148,15 +163,31 @@ export const CentralAllocationForm = () => {
               <Controller
                 name="wingId"
                 control={control}
-                render={({ field }) => (
-                  <Select {...field}>
-                    {wingOptions.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const wingOptions = selectedFloorId
+                    ? data.buildings
+                        .filter(
+                          (building) => building.id === selectedBuildingId
+                        )[0]
+                        .floors.filter(
+                          (floor) => floor.id === selectedFloorId
+                        )[0]
+                        .wings.map((wing: any) => ({
+                          id: wing.id,
+                          label: wing.wingName,
+                        }))
+                    : [];
+
+                  return (
+                    <Select {...field} disabled={selectedFloorId === ""}>
+                      {wingOptions.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                }}
               />
             </Stack>
           </FormControl>
@@ -168,13 +199,23 @@ export const CentralAllocationForm = () => {
               <Controller
                 name="capacity"
                 control={control}
-                render={({ field }) => <TextField {...field} type="number" />}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="number"
+                    disabled={selectedWingId === ""}
+                  />
+                )}
               />
             </Stack>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" type="submit" disabled={loading}>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={loading || selectedWingId === ""}
+          >
             Allocate
           </Button>
         </Grid>
