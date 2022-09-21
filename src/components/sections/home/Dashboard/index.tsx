@@ -9,23 +9,20 @@ export const Dashboard = () => {
     return <CircularProgress />;
   }
 
-  const { capacity, seatCount } = getDashboardData.data;
-
-  const currentAllocated =
-    capacity.length > 0 ? capacity[0].assignedCapacity : 0;
+  const { totalAssignedCapacity, totalSeatsCount } = getDashboardData.data;
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={4}>
-        <StatsCard label="Available Seats" count={seatCount} />
+        <StatsCard label="Total Seats" count={totalSeatsCount} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <StatsCard label="Current Allocations" count={currentAllocated} />
+        <StatsCard label="Allocated Seats" count={totalAssignedCapacity} />
       </Grid>
       <Grid item xs={12} md={4}>
         <StatsCard
-          label="Available Allocations"
-          count={seatCount - currentAllocated}
+          label="Available Seats"
+          count={totalSeatsCount - totalAssignedCapacity}
         />
       </Grid>
     </Grid>

@@ -19,10 +19,11 @@ export const SeatQuery = extendType({
         return prisma.seat.findMany();
       },
     });
-    t.nonNull.int("seatCount", {
-      description: "Get all Seats count",
-      resolve(_parent, _args, { prisma }) {
-        return prisma.seat.count();
+    t.nonNull.field("totalSeatsCount", {
+      description: "Total seats count",
+      type: "Int",
+      async resolve(_parent, _args, { prisma }) {
+        return await prisma.seat.count();
       },
     });
   },

@@ -2,10 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 
 const GET_DASHBOARD_DATA = gql`
   query Capacity {
-    capacity {
-      assignedCapacity
-    }
-    seatCount
+    totalAssignedCapacity
+    totalSeatsCount
   }
 `;
 

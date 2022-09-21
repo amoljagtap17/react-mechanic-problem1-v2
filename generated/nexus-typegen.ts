@@ -151,7 +151,6 @@ export interface NexusGenFieldTypes {
     id: string; // String!
   }
   Capacity: { // field return type
-    assignedCapacity: number | null; // Int
     building: NexusGenRootTypes['Building'] | null; // Building
     buildingId: string; // String!
     capacity: number; // Int!
@@ -195,9 +194,10 @@ export interface NexusGenFieldTypes {
     departmentsForCurrentUser: NexusGenRootTypes['Department'][]; // [Department!]!
     divisions: NexusGenRootTypes['Division'][]; // [Division!]!
     floors: NexusGenRootTypes['Floor'][]; // [Floor!]!
-    seatCount: number; // Int!
     seats: NexusGenRootTypes['Seat'][]; // [Seat!]!
     super_users: NexusGenRootTypes['User'][]; // [User!]!
+    totalAssignedCapacity: number; // Int!
+    totalSeatsCount: number; // Int!
     users: NexusGenRootTypes['User'][]; // [User!]!
     wings: NexusGenRootTypes['Wing'][]; // [Wing!]!
   }
@@ -246,7 +246,6 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
   }
   Capacity: { // field return type name
-    assignedCapacity: 'Int'
     building: 'Building'
     buildingId: 'String'
     capacity: 'Int'
@@ -290,9 +289,10 @@ export interface NexusGenFieldTypeNames {
     departmentsForCurrentUser: 'Department'
     divisions: 'Division'
     floors: 'Floor'
-    seatCount: 'Int'
     seats: 'Seat'
     super_users: 'User'
+    totalAssignedCapacity: 'Int'
+    totalSeatsCount: 'Int'
     users: 'User'
     wings: 'Wing'
   }

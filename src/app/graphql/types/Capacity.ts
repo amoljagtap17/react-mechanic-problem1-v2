@@ -54,17 +54,6 @@ export const Capacity = objectType({
         });
       },
     });
-    t.field("assignedCapacity", {
-      description: "Assigned Capacity",
-      type: "Int",
-      async resolve(_parent, _args, { prisma }) {
-        const data = await prisma.capacity.aggregate({
-          _sum: { capacity: true },
-        });
-
-        return data._sum.capacity;
-      },
-    });
   },
 });
 
@@ -76,6 +65,17 @@ export const CapacityQuery = extendType({
       description: "Get all Capacity details",
       resolve(_parent, _args, { prisma }) {
         return prisma.capacity.findMany();
+      },
+    });
+    t.nonNull.field("totalAssignedCapacity", {
+      description: "Total Assigned Capacity",
+      type: "Int",
+      async resolve(_parent, _args, { prisma }) {
+        const data = await prisma.capacity.aggregate({
+          _sum: { capacity: true },
+        });
+
+        return data._sum.capacity;
       },
     });
   },
