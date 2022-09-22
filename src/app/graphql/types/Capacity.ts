@@ -75,7 +75,7 @@ export const CapacityQuery = extendType({
           _sum: { capacity: true },
         });
 
-        return data._sum.capacity;
+        return data._sum.capacity || 0;
       },
     });
   },
